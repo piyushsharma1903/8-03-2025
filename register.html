@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConcertTix - Sign Up</title>
+    <style>
+        :root {
+            --primary-color: #6952e9; /* Match login page purple */
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --text-light: #777777;
+            --border-radius: 10px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7ff; /* Light purple tint */
+            color: var(--text-color);
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        
+        .form {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 40px 30px;
+            box-shadow: var(--shadow);
+            width: 100%;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(105, 82, 233, 0.1);
+        }
+        
+        .camera-section {
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .video-feed {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 8px;
+            transform: scaleX(-1);
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        #photoPreview {
+            display: none;
+            max-width: 300px;
+            margin: 1rem auto;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin: 10px 5px;
+        }
+        
+        button:hover {
+            background-color: #4a3cd1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(105, 82, 233, 0.2);
+        }
+        
+        button:disabled {
+            background-color: #a8a8a8;
+            transform: none;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+        
+        .capture-btn {
+            background-color: #4CAF50;
+        }
+        
+        .capture-btn:hover {
+            background-color: #3d8b40;
+        }
+        
+        .retake-btn {
+            background-color: #f44336;
+        }
+        
+        .retake-btn:hover {
+            background-color: #d32f2f;
+        }
+        
+        .permission-error {
+            color: #f44336;
+            text-align: center;
+            padding: 15px;
+            background-color: rgba(244, 67, 54, 0.1);
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.95rem;
+            color: var(--text-light);
+        }
+        
+        .login-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 576px) {
+            .container {
+                margin: 30px auto;
+                padding: 0 10px;
+            }
+            
+            .form {
+                padding: 30px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ConcertTix</h1>
+        <form class="form" id="signupForm">
+            <h2 style="text-align: center; margin-top: 0; margin-bottom: 30px;">Create Account</h2>
+            
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+
+            <div class="camera-section">
+                <button type="button" id="startCamera">Verify with Photo ID</button>
+                <div class="permission-error" id="permissionError">
+                    Camera access denied. Please enable camera permissions.
+                </div>
+
+                <div id="cameraUI" style="display: none;">
+                    <video class="video-feed" id="videoFeed"></video>
+                    <button type="button" class="capture-btn" id="captureBtn">Capture Photo</button>
+                </div>
+
+                <img id="photoPreview" alt="Captured photo">
+                <button type="button" class="retake-btn" id="retakeBtn" style="display: none;">Retake Photo</button>
+            </div>
+
+            <button type="submit" style="width: 100%;">Complete Registration</button>
+            
+            <div class="login-link">
+                Already have an account? <a href="login.html">Log In</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const video = document.getElementById('videoFeed');
+        const startCameraBtn = document.getElementById('startCamera');
+        const captureBtn = document.getElementById('captureBtn');
+        const retakeBtn = document.getElementById('retakeBtn');
+        const photoPreview = document.getElementById('photoPreview');
+        const cameraUI = document.getElementById('cameraUI');
+        const permissionError = document.getElementById('permissionError');
+        let stream = null;
+
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: 'user',
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
+                    }
+                });
+
+                video.srcObject = stream;
+                permissionError.style.display = 'none';
+
+                video.onloadedmetadata = () => {
+                    video.play();
+                    cameraUI.style.display = 'block';
+                    startCameraBtn.style.display = 'none';
+                };
+            } catch (err) {
+                console.error('Camera error:', err);
+                permissionError.style.display = 'block';
+                startCameraBtn.disabled = true;
+            }
+        }
+
+        function capturePhoto() {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            stream.getTracks().forEach(track => track.stop());
+
+            photoPreview.src = canvas.toDataURL('image/jpeg');
+            photoPreview.style.display = 'block';
+            cameraUI.style.display = 'none';
+            retakeBtn.style.display = 'block';
+        }
+
+        startCameraBtn.addEventListener('click', startCamera);
+        captureBtn.addEventListener('click', capturePhoto);
+
+        retakeBtn.addEventListener('click', () => {
+            photoPreview.style.display = 'none';
+            retakeBtn.style.display = 'none';
+            startCamera();
+        });
+
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!photoPreview.src) {
+                alert('Please capture your photo first');
+                return;
+            }
+
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                password: document.getElementById('password').value,
+                photo: photoPreview.src.split(',')[1]
+            };
+
+            console.log('Form data:', formData);
+            alert('Registration submitted successfully!');
+
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>
